@@ -1,4 +1,4 @@
-# Canvas LMS Class Visualizations Web App
+# Canvas LMS Class Visualizations API
 
 Feel free to clone the repo.
 
