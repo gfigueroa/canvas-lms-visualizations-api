@@ -1,4 +1,1 @@
-files/*
 config/*_env.rb
-db/*.db
-.bundle/
