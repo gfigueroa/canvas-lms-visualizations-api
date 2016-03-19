@@ -56,10 +56,20 @@ namespace :heroku do
 end
 
 desc 'Generate DB & MSG keys'
+# Duplicates to help with both sets of environments - dev & test, production.
 task :keys_for_config do
   2.times do
     key = RbNaCl::Random.random_bytes(RbNaCl::SecretBox.key_bytes)
-    print 'either key: '
-    puts Base64.urlsafe_encode64(key)
+    puts "MSG_KEY: #{Base64.urlsafe_encode64(key)}"
+  end
+  2.times do
+    private_key = RbNaCl::PrivateKey.generate
+    puts "UI Private Key: #{Base64.urlsafe_encode64(private_key)}"
+    puts "UI Public Key: #{Base64.urlsafe_encode64(private_key.public_key)}"
+  end
+  2.times do
+    private_key = RbNaCl::PrivateKey.generate
+    puts "API Private Key: #{Base64.urlsafe_encode64(private_key)}"
+    puts "API Public Key: #{Base64.urlsafe_encode64(private_key.public_key)}"
   end
 end

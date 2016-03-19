@@ -25,7 +25,7 @@ class CanvasVisualizationWebApp < Sinatra::Base
   configure :production do
     use Rack::SslEnforcer
     set :session_secret, ENV['MSG_KEY']
-    set :root, 'https://canvas-viz.herokuapp.com'
+    set :root, 'https://canvas-viz-api.herokuapp.com'
   end
 
   api_get_root = lambda do
@@ -35,7 +35,18 @@ class CanvasVisualizationWebApp < Sinatra::Base
   end
 
   get_course_list = lambda do
-    params_for_api = ParamsForCanvasApi.new(params['url'], params['token'])
+    bearer_token = env['HTTP_AUTHORIZATION']
+    halt 400 unless bearer_token
+    token = DecryptPayload.new(bearer_token)
+    halt 400 unless token.valid?
+    token =
+    begin
+      token.call
+    rescue => e
+      logger.error e
+      halt 401
+    end
+    params_for_api = ParamsForCanvasApi.new(params['url'], token)
     halt 400 unless params_for_api.valid?
     courses = GetCoursesFromCanvas.new(params_for_api.canvas_api,
                                        params_for_api.canvas_token)
@@ -43,8 +54,19 @@ class CanvasVisualizationWebApp < Sinatra::Base
   end
 
   go_to_api_with_request = lambda do
+    bearer_token = env['HTTP_AUTHORIZATION']
+    halt 400 unless bearer_token
+    token = DecryptPayload.new(bearer_token)
+    halt 400 unless token.valid?
+    token =
+    begin
+      token.call
+    rescue => e
+      logger.error e
+      halt 401
+    end
     params_for_api = ParamsForCanvasApi.new(
-      params['url'], params['token'], params['course_id'], params['data']
+      params['url'], token, params['course_id'], params['data']
     )
     halt 400 unless params_for_api.valid?
     result =
@@ -59,8 +81,17 @@ class CanvasVisualizationWebApp < Sinatra::Base
     result.call
   end
 
+  encrypt_token = lambda do
+    bearer_token = env['HTTP_AUTHORIZATION']
+    halt 400 unless bearer_token
+    token = EncryptToken.new(bearer_token)
+    halt 400 unless token.valid?
+    token.call
+  end
+
   # API Routes
   ['/', '/api/v1/?'].each { |path| get path, &api_get_root }
   get '/courses/?', &get_course_list
   get '/courses/:course_id/:data/?', &go_to_api_with_request
+  get '/encrypt_token/?', &encrypt_token
 end
