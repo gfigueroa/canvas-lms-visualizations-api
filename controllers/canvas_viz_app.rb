@@ -35,10 +35,9 @@ class CanvasVisualizationWebApp < Sinatra::Base
   end
 
   get_course_list = lambda do
-    bearer_token = env['HTTP_AUTHORIZATION']
-    halt 400 unless bearer_token
-    token = DecryptPayload.new(bearer_token)
-    halt 400 unless token.valid?
+    payload = BearerToken.new(env['HTTP_AUTHORIZATION'])
+    halt 400 unless payload.valid?
+    token = DecryptPayload.new(payload.bearer_token)
     token =
     begin
       token.call
@@ -54,10 +53,9 @@ class CanvasVisualizationWebApp < Sinatra::Base
   end
 
   go_to_api_with_request = lambda do
-    bearer_token = env['HTTP_AUTHORIZATION']
-    halt 400 unless bearer_token
-    token = DecryptPayload.new(bearer_token)
-    halt 400 unless token.valid?
+    payload = BearerToken.new(env['HTTP_AUTHORIZATION'])
+    halt 400 unless payload.valid?
+    token = DecryptPayload.new(payload.bearer_token)
     token =
     begin
       token.call
@@ -82,10 +80,9 @@ class CanvasVisualizationWebApp < Sinatra::Base
   end
 
   encrypt_token = lambda do
-    bearer_token = env['HTTP_AUTHORIZATION']
-    halt 400 unless bearer_token
-    token = EncryptToken.new(bearer_token)
+    token = BearerToken.new(env['HTTP_AUTHORIZATION'])
     halt 400 unless token.valid?
+    token = EncryptToken.new(token.bearer_token)
     token.call
   end
 
