@@ -14,7 +14,7 @@ configure :development, :test do
 end
 
 # Visualizations for Canvas LMS Classes
-class CanvasVisualizationWebApp < Sinatra::Base
+class CanvasVisualizationAPI < Sinatra::Base
   enable :logging
   use Rack::MethodOverride
 
@@ -76,6 +76,7 @@ class CanvasVisualizationWebApp < Sinatra::Base
     when 'enrollments' then GetCourseInfoFromCanvas.new(params_for_api)
     when 'discussion_topics' then GetDiscussionsFromCanvas.new(params_for_api)
     end
+    result = VisualizationTraffic.new(params['data'], result.call)
     result.call
   end
 
