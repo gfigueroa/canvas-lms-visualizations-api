@@ -14,7 +14,7 @@ configure :development, :test do
 end
 
 # Visualizations for Canvas LMS Classes
-class CanvasVisualizationWebApp < Sinatra::Base
+class CanvasVisualizationAPI < Sinatra::Base
   enable :logging
   use Rack::MethodOverride
 
