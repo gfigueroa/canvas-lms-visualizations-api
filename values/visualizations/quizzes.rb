@@ -14,15 +14,15 @@ class QuizzesView
   end
 
   def scores(scores = { high: {}, low: {}, average: {} })
-    @data.each do |name, statistics|
-      statistics = JSON.parse(statistics)['quiz_statistics'][0]
-      scores.each_key do |key|
-        scores[key][name] = [
-          statistics['submission_statistics']["score_#{key}"],
-          statistics['points_possible']
-        ]
-      end
-    end
+    @data.each do |dat|
+      dat.each do |name, statistics|
+        statistics = JSON.parse(statistics)['quiz_statistics'][0]
+        scores.each_key do |key|
+          scores[key][name] = [
+            statistics['submission_statistics']["score_#{key}"],
+            statistics['points_possible']
+          ]
+        end; end; end
     scores
   end
 

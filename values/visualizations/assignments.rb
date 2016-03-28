@@ -7,6 +7,7 @@ class AssignmentsView
   end
 
   def call
+    return { result: 'No assignment found' }.to_json if @data.nil?
     { tard: tard, scores: final_scores,
       scores_percent: scores_percent }.to_json
   end
