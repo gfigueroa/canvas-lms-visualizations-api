@@ -5,12 +5,13 @@ class ActivityView
   end
 
   def call
-    v_p = [
+    views_participations_by_date = [
       { name: 'Participations', data: participations },
       { name: 'Views', data: views }
     ]
     views_by_day, participations_by_day = views_and_part_by_day
-    { v_p: v_p, views_by_day: views_by_day,
+    { views_participations_by_date: views_participations_by_date,
+      views_by_day: views_by_day,
       participations_by_day: participations_by_day }.to_json
   end
 

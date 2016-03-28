@@ -8,6 +8,7 @@ class UsersView
   end
 
   def call
+    # dow means dayOfWeek; so views_dow means views by day of week.
     result_one = views_dow
     result_two = participations_dow
     result_one.each do |k, _|
