@@ -27,6 +27,10 @@ To get up and running on localhost, run `rake` from the terminal.
   - a `data` field passed in the url. This field determines what information the api attempts to get from your Canvas installation. The possible options and can be found in the [data table](#data) below.
   - an encrypted form of your Canvas token obtained using the `/encrypt_token` route.
 
+### Tests
+
+- Use the `encrypt_token` route to create a token and add it to your config_env (see example) to run the tests - `rake specs` from your terminal.
+
 ### Data
 
 Option              | Sample request                      | What it returns

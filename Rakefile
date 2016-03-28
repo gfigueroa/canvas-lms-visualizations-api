@@ -8,8 +8,8 @@ require 'rake/testtask'
 task default: [:local_and_running]
 
 desc 'Run specs'
-Rake::TestTask.new(:spec) do |t|
-  t.pattern = 'spec/*_spec.rb'
+Rake::TestTask.new(:specs) do |t|
+  t.pattern = 'specs/*_spec.rb'
 end
 
 desc 'Local and running'
