@@ -24,23 +24,23 @@ describe 'Getting the root of the service' do
   end
 end
 
-describe 'Encrypt a random string' do
-  it 'should return an encrypted a string and decrypt to original' do
-    header HTTP_AUTHORIZATION, 'Bearer ' + RANDOM_STRING
-    get '/encrypt_token'
-    last_response.status.must_equal 200
-    encrypted_string = last_response.body
-    encrypted_string.wont_equal RANDOM_STRING
-    original_string = DecryptPayload.new(encrypted_string).call
-    original_string.must_equal RANDOM_STRING
-  end
-end
+# describe 'Encrypt a random string' do
+#   it 'should return an encrypted a string and decrypt to original' do
+#     header HTTP_AUTHORIZATION, 'Bearer ' + RANDOM_STRING
+#     get '/encrypt_token'
+#     last_response.status.must_equal 200
+#     encrypted_string = last_response.body
+#     encrypted_string.wont_equal RANDOM_STRING
+#     original_string = DecryptPayload.new(encrypted_string).call
+#     original_string.must_equal RANDOM_STRING
+#   end
+# end
 
 describe 'Get course list and visit data pages' do
   course_ids = []
   it 'should return an array of hashes with specific info' do
     header HTTP_AUTHORIZATION, TOKEN
-    get '/courses'
+    get '/api/v1/courses'
     last_response.status.must_equal 200
     courses = JSON.parse last_response.body
     courses.must_be_kind_of Array
@@ -55,7 +55,7 @@ describe 'Get course list and visit data pages' do
     course_id = course_ids.sample
     POSSIBLE_DATA.each do |data|
       header HTTP_AUTHORIZATION, TOKEN
-      get "/courses/#{course_id}/#{data}"
+      get "/api/v1/courses/#{course_id}/#{data}"
       last_response.status.must_equal 200
       result = JSON.parse last_response.body
       [Hash, Array].must_include result.class

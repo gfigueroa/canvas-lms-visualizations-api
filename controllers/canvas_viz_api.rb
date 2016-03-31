@@ -80,16 +80,16 @@ class CanvasVisualizationAPI < Sinatra::Base
     result.call
   end
 
-  encrypt_token = lambda do
-    token = BearerToken.new(env['HTTP_AUTHORIZATION'])
-    halt 400 unless token.valid?
-    token = EncryptToken.new(token.bearer_token)
-    token.call
-  end
+  # encrypt_token = lambda do
+  #   token = BearerToken.new(env['HTTP_AUTHORIZATION'])
+  #   halt 400 unless token.valid?
+  #   token = EncryptToken.new(token.bearer_token)
+  #   token.call
+  # end
 
   # API Routes
   ['/', '/api/v1/?'].each { |path| get path, &api_get_root }
-  get '/courses/?', &get_course_list
-  get '/courses/:course_id/:data/?', &go_to_api_with_request
-  get '/encrypt_token/?', &encrypt_token
+  get '/api/v1/courses/?', &get_course_list
+  get '/api/v1/courses/:course_id/:data/?', &go_to_api_with_request
+  # get '/api/v1/encrypt_token/?', &encrypt_token
 end
