@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] = 'test'
+
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'rack/test'
@@ -6,9 +8,7 @@ require 'rack/test'
 # require 'yaml'
 # require 'virtus'
 
-ENV['RACK_ENV'] = 'test'
-
-Dir.glob('./{controllers,services,values}/*.rb').each do |file|
+Dir.glob('./{models,controllers,services,values}/*.rb').each do |file|
   require file
 end
 

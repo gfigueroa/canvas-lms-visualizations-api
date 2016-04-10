@@ -1,7 +1,8 @@
-Dir.glob('./{controllers,services,values}/*.rb').each do |file|
+Dir.glob('./{models,controllers,services,values}/*.rb').each do |file|
   require file
 end
 
+require 'sinatra/activerecord/rake'
 require 'config_env/rake_tasks'
 require 'rake/testtask'
 
@@ -28,8 +29,13 @@ namespace :local do
     system 'bundle install'
   end
 
+  desc 'Set up local database'
+  task :local_db do
+    system 'rake db:migrate'
+  end
+
   desc 'Set up local'
-  task local_and_running: [:bundle_install] do
+  task local_and_running: [:bundle_install, :local_db] do
   end
 end
 
@@ -44,13 +50,23 @@ namespace :heroku do
     system 'git push -f heroku master'
   end
 
+  desc 'Create heroku database'
+  task :make_heroku_db do
+    system 'heroku addons:create heroku-postgresql:hobby-dev'
+  end
+
+  desc 'Set up heroku database'
+  task migrate_heroku_db: [:make_heroku_db] do
+    system 'heroku run rake db:migrate'
+  end
+
   desc 'Transfer heroku environment variables'
   task :transfer_config_env do
     system 'rake config_env:heroku'
   end
 
   desc 'And it\'s a wrap'
-  task up_and_running: [:create_heroku, :push_to_heroku,
+  task up_and_running: [:create_heroku, :push_to_heroku, :migrate_heroku_db,
                         :transfer_config_env] do
   end
 end
@@ -58,9 +74,9 @@ end
 desc 'Generate DB & MSG keys'
 # Duplicates to help with both sets of environments - dev & test, production.
 task :keys_for_config do
-  2.times do
+  4.times do
     key = RbNaCl::Random.random_bytes(RbNaCl::SecretBox.key_bytes)
-    puts "MSG_KEY: #{Base64.urlsafe_encode64(key)}"
+    puts "DB_KEY/MSG_KEY: #{Base64.urlsafe_encode64(key)}"
   end
   2.times do
     private_key = RbNaCl::PrivateKey.generate
