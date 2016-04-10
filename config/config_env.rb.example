@@ -7,9 +7,7 @@
 
 config_env :[ENV_NAME] do
   set 'MSG_KEY', [Session secret key]
-  set 'UI_PRIVATE_KEY', [Private key for UI App]
   set 'UI_PUBLIC_KEY', [Public key for UI App]
   set 'API_PRIVATE_KEY', [Private key for API]
-  set 'API_PUBLIC_KEY', [Public key for API]
   set 'CANVAS_TOKEN', [Using encrypt_token route] # Only in test environment
 end
